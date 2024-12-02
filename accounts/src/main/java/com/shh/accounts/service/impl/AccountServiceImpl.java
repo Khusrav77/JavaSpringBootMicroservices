@@ -1,10 +1,13 @@
 package com.shh.accounts.service.impl;
 
 import com.shh.accounts.constants.ConstantsAccount;
+import com.shh.accounts.dto.AccountsDto;
 import com.shh.accounts.dto.CustomerDto;
 import com.shh.accounts.entity.Accounts;
 import com.shh.accounts.entity.Customer;
 import com.shh.accounts.exception.CustomerAlreadyExistsException;
+import com.shh.accounts.exception.ResourceNotFoundExceptions;
+import com.shh.accounts.mapper.AccountMapper;
 import com.shh.accounts.mapper.CustomerMapper;
 import com.shh.accounts.repository.AccountRepository;
 import com.shh.accounts.repository.CustomerRepository;
@@ -38,6 +41,7 @@ public class AccountServiceImpl implements IAccountService {
         accountRepository.save(creatNewAccount(savedCustomer));
     }
 
+
     private Accounts creatNewAccount(Customer customer) {
        Accounts newAccount = new Accounts();
        newAccount.setCustomerId(customer.getCustomerId());
@@ -49,5 +53,22 @@ public class AccountServiceImpl implements IAccountService {
        newAccount.setCreatAt(LocalDateTime.now());
        newAccount.setCreatBy("Anonymous");
        return newAccount;
+    }
+
+
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundExceptions("Customer", "mobileNumber", mobileNumber)
+        );
+
+        Accounts accounts = accountRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+                () -> new ResourceNotFoundExceptions("Account", "customerId", customer.getCustomerId().toString())
+        );
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountsDto(AccountMapper.mapToAccountDto(accounts, new AccountsDto()));
+        return customerDto;
     }
 }
