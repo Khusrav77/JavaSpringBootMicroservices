@@ -45,9 +45,9 @@ public class AccountServiceImpl implements IAccountService {
     private Accounts creatNewAccount(Customer customer) {
        Accounts newAccount = new Accounts();
        newAccount.setCustomerId(customer.getCustomerId());
-       long rondomAccId = 1000000000L + new Random().nextLong(900000000);
+       long rondomId = 1000000000L + new Random().nextLong(900000000);
 
-       newAccount.setAccountId(rondomAccId);
+       newAccount.setAccountId(rondomId);
        newAccount.setAccountType(ConstantsAccount.SAVINGS);
        newAccount.setBranchAddress(ConstantsAccount.ADDRESS);
        newAccount.setCreatAt(LocalDateTime.now());
@@ -70,5 +70,36 @@ public class AccountServiceImpl implements IAccountService {
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
         customerDto.setAccountsDto(AccountMapper.mapToAccountDto(accounts, new AccountsDto()));
         return customerDto;
+    }
+
+
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+       boolean isUpdated = false;
+       AccountsDto accountsDto = customerDto.getAccountsDto();
+
+       if (accountsDto != null) {
+           Accounts accounts = accountRepository.findById(accountsDto.getAccountId()).orElseThrow(
+                   () -> new ResourceNotFoundExceptions("Account", "AccountId", accountsDto.getAccountId().toString()));
+
+           AccountMapper.mapToAccounts(accountsDto, accounts);
+           accounts = accountRepository.save(accounts);
+
+           Long customerId = accounts.getCustomerId();
+           Customer customer = customerRepository.findById(customerId).orElseThrow(
+                    () -> new ResourceNotFoundExceptions("Customer", "CustomerId", customerId.toString()));
+
+           CustomerMapper.mapToCustomer(customerDto, customer);
+           customerRepository.save(customer);
+           isUpdated = true;
+       };
+
+        return isUpdated;
+    }
+
+
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+        return false;
     }
 }
