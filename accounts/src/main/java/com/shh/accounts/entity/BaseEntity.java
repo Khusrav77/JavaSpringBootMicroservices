@@ -1,24 +1,33 @@
 package com.shh.accounts.entity;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 @MappedSuperclass
-@Getter @Setter
-@ToString
+@EntityListeners(AuditingEntityListener.class)
+@Getter @Setter @ToString
 public class BaseEntity {
 
+    @CreatedDate
     @Column(updatable = false)
     private LocalDateTime creatAt;
-    @Column(insertable = false)
-    private LocalDateTime creatBy;
 
+    @CreatedBy
+    @Column(insertable = false)
+    private String creatBy;
+
+    @LastModifiedDate
     @Column(updatable = false)
-    private String updateAt;
+    private LocalDateTime updateAt;
+
+    @LastModifiedBy
     @Column(insertable = false)
     private String updateBy;
 }

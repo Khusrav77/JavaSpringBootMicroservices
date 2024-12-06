@@ -1,23 +1,19 @@
 package com.shh.accounts.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Getter
-@Setter
+@Entity
+@AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @ToString
 public class Accounts extends BaseEntity {
 
     @Column(name = "customer_id")
     private Long customerId;
 
-    @Column(name = "account_id")
     @Id
+    @Column(name = "account_id")
     private Long accountId;
 
     @Column(name = "account_type")
