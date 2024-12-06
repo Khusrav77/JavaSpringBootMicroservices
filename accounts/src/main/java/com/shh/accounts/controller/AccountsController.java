@@ -80,6 +80,11 @@ public class AccountsController {
                 responseCode = "200",
                 description = "HTTP Status OK"
         ),
+
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed "
+            ),
         @ApiResponse(
                 responseCode = "500",
                 description = "HTTP Status Internal Server Error",
@@ -97,8 +102,8 @@ public class AccountsController {
                     .body(new ResponseDto(ConstantsAccount.STATUS_200, ConstantsAccount.MESSAGE_200));
         } else {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDto(ConstantsAccount.STATUS_500, ConstantsAccount.MESSAGE_500));
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(ConstantsAccount.STATUS_417, ConstantsAccount.MESSAGE_417_UPDATE));
         }
     }
 
@@ -111,6 +116,10 @@ public class AccountsController {
             @ApiResponse(
                     responseCode = "200",
                     description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed "
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -130,8 +139,8 @@ public class AccountsController {
                     .body(new ResponseDto(ConstantsAccount.STATUS_200, ConstantsAccount.MESSAGE_200));
         } else {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDto(ConstantsAccount.STATUS_500, ConstantsAccount.MESSAGE_500));
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(ConstantsAccount.STATUS_417, ConstantsAccount.MESSAGE_417_DELETE));
         }
     }
 }
